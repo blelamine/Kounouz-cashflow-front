@@ -17,9 +17,10 @@ import { checkPurpose, checkStatus } from "../../Constants/types";
 import format_number from "../../Helpers/number_formatter";
 import validate from "../../Helpers/validate";
 import { CheckModel } from "../../Models/CheckModel";
-import AddEdit from "./AddEdit.component";
 import CheckHistoric from "./CheckHistoric";
 import { multiDataSet } from "./excel_data";
+import AddEditCheck from "./AddEditCheck.component";
+import { CheckAtom } from "../../Atoms/check.atom";
 export default function Check(props) {
   // STATE
   const [data, setdata] = useState([]);
@@ -48,13 +49,13 @@ export default function Check(props) {
   });
   // --- add edit model ---
   const [error, setError] = useState("");
-  const [model, setmodel] = useState(new CheckModel());
-
+  const [model, setModel] = useRecoilState(CheckAtom);
+  console.log(model, "model");
   // ATOMS
   const [state, setstate] = useRecoilState(exportAddAtom);
   // HELPERS
   const reset = () => {
-    setmodel(new CheckModel());
+    setModel(new CheckModel());
     setError("");
   };
   // API CALLS
@@ -62,9 +63,11 @@ export default function Check(props) {
     if (typeof q == "undefined" || q.length > 2) {
       APi.createAPIEndpoint(APi.ENDPOINTS.Client, { q }, "/autocomplete")
         .customGet()
-        .then((res) =>
-          forFilter ? setclients(res.data) : setclients2(res.data)
-        );
+        .then((res) => {
+          console.log(res.data, "res");
+          setclients(res.data);
+          setclients2(res.data);
+        });
     }
   };
   const fetchBanks = (q) => {
@@ -262,11 +265,8 @@ export default function Check(props) {
           arr.unshift({ id: res.data.client.id, name: res.data.client.name });
           setclients2(arr);
         }
-        setmodel({
-          ...res.data,
-          // date: new Date(res.data.date),
-          // changeDate: new Date(res.data.changeDate),
-        });
+        let m = { ...res.data };
+        setModel(m);
       })
       .catch((e) => {
         console.log(e);
@@ -296,7 +296,7 @@ export default function Check(props) {
             items[i].status = "finished";
             return items;
           });
-          setmodel((prev) => {
+          setModel((prev) => {
             return { ...model, attachments: res.data[0].name };
           });
         })
@@ -324,7 +324,7 @@ export default function Check(props) {
         });
         let attachments = [...model.attachments];
         attachments.splice(i);
-        setmodel((prev) => {
+        setModel((prev) => {
           return { ...model, attachments };
         });
       })
@@ -466,6 +466,7 @@ export default function Check(props) {
       ),
     },
   ];
+
   return (
     <div>
       <Filter
@@ -508,11 +509,9 @@ export default function Check(props) {
           <label>Client: </label>
           <SelectPicker
             onSearch={(q) => fetchClients(q)}
-            data={[{ label: "Tout", value: 0 }].concat(
-              clients.map((c) => {
-                return { label: c.name, value: c.id };
-              })
-            )}
+            data={clients?.map((c) => {
+              return { label: c.name, value: c.id };
+            })}
             block
             noSearch
             value={filterModel.clientId}
@@ -560,19 +559,18 @@ export default function Check(props) {
         nameExcel="check"
         size="md"
         save={save}
+        ActionOnClose={reset}
         AddComponent={
-          <AddEdit
+          <AddEditCheck
             upload={upload}
             error={error}
-            model={model}
             banks={banks.map((el) => {
               return { label: el.name, value: el.id };
             })}
             _delete={_delete}
             fetchBanks={fetchBanks}
-            clients={clients2}
+            clients={clients}
             fetchClients={(q) => fetchClients(q, false)}
-            _setmodel={setmodel}
           />
         }
       />

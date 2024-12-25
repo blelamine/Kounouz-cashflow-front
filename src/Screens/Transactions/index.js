@@ -115,7 +115,7 @@ export default function Transactions(props) {
 
           document.querySelector("#hidden-btn-export").click();
         } else {
-          setdata(res.data.data);
+          setdata(res?.data?.data);
           setstate((prev) => {
             return { ...prev, loading: false };
           });
@@ -362,7 +362,9 @@ export default function Transactions(props) {
       value: "representative",
       name: "Représentant",
       render: (v) => (
-        <b style={{ color: "#a90e43" }}>{v ? v.toUpperCase() : "-"}</b>
+        <b style={{ color: "#a90e43" }}>
+          {v ? v.firstName.toUpperCase() : "-"}
+        </b>
       ),
     },
     {

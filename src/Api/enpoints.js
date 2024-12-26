@@ -36,4 +36,5 @@ export const ENDPOINTS = {
   Tax: "Tax",
   Representative: "Representative",
   CCA: "CCA",
+  OperationType: "OperationType",
 };

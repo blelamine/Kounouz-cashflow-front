@@ -11,14 +11,14 @@ import { checkPurpose, checkStatus } from "../../Constants/types";
 import FileUploadIcon from "@rsuite/icons/FileUpload";
 import moment from "moment";
 import { useEffect } from "react";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import Responsive from "../../Components/Responsive";
 import PlusRoundIcon from "@rsuite/icons/PlusRound";
 import TrashIcon from "@rsuite/icons/Trash";
-function AddEdit({
-  _setmodel,
+import { CheckAtom } from "../../Atoms/check.atom";
+
+const AddEditCheck = ({
   error,
-  model,
   clients,
   banks,
   fetchBanks,
@@ -28,7 +28,8 @@ function AddEdit({
   _delete,
   upload,
   inset,
-}) {
+}) => {
+  const [model, setModel] = useRecoilState(CheckAtom);
   return (
     <>
       <Responsive l={6} xl={6} className="p-5">
@@ -36,7 +37,7 @@ function AddEdit({
         <Input
           maxlength="7"
           onChange={(number) => {
-            _setmodel((prev) => {
+            setModel((prev) => {
               return { ...prev, number };
             });
           }}
@@ -53,7 +54,7 @@ function AddEdit({
           noSearch
           value={model.status}
           onSelect={(status) => {
-            _setmodel((prev) => {
+            setModel((prev) => {
               return {
                 ...prev,
                 status,
@@ -84,7 +85,7 @@ function AddEdit({
                       let g = { ...checkPartialPayments[i] };
                       g.amount = parseFloat(amount);
                       checkPartialPayments[i] = g;
-                      _setmodel({ ...model, checkPartialPayments });
+                      setModel({ ...model, checkPartialPayments });
                     }}
                   />
                 </Responsive>
@@ -104,7 +105,7 @@ function AddEdit({
                       let g = { ...checkPartialPayments[i] };
                       g.date = date;
                       checkPartialPayments[i] = g;
-                      _setmodel({ ...model, checkPartialPayments });
+                      setModel({ ...model, checkPartialPayments });
                     }}
                   />
                 </Responsive>
@@ -119,7 +120,7 @@ function AddEdit({
                             ...model.checkPartialPayments,
                           ];
                           checkPartialPayments.splice(i, 1);
-                          _setmodel({ ...model, checkPartialPayments });
+                          setModel({ ...model, checkPartialPayments });
                         }}
                         color="violet"
                         icon={<TrashIcon />}
@@ -137,7 +138,7 @@ function AddEdit({
                             amount: 0,
                             date: new Date(),
                           });
-                          _setmodel({ ...model, checkPartialPayments });
+                          setModel({ ...model, checkPartialPayments });
                         }}
                         color="violet"
                         icon={<PlusRoundIcon />}
@@ -158,7 +159,7 @@ function AddEdit({
               type="date"
               value={moment(model.changeDate).format("YYYY-MM-DD")}
               onChange={(changeDate) =>
-                _setmodel((prev) => {
+                setModel((prev) => {
                   return { ...prev, changeDate };
                 })
               }
@@ -170,7 +171,7 @@ function AddEdit({
             <Input
               value={model.payingInSlip}
               onChange={(payingInSlip) =>
-                _setmodel((prev) => {
+                setModel((prev) => {
                   return { ...prev, payingInSlip };
                 })
               }
@@ -188,7 +189,7 @@ function AddEdit({
           step="0.1"
           value={model.amount}
           onChange={(amount) => {
-            _setmodel((prev) => {
+            setModel((prev) => {
               return { ...prev, amount };
             });
           }}
@@ -199,7 +200,7 @@ function AddEdit({
         <Input
           value={model.owner}
           onChange={(owner) => {
-            _setmodel((prev) => {
+            setModel((prev) => {
               return { ...prev, owner };
             });
           }}
@@ -211,16 +212,14 @@ function AddEdit({
             <label>Client: </label>
             <SelectPicker
               onSearch={(q) => fetchClients(q)}
-              data={[{ label: "Tout", value: 0 }].concat(
-                clients.map((c) => {
-                  return { label: c.name, value: c.id };
-                })
-              )}
+              data={clients.map((c) => {
+                return { label: c.name, value: c.id };
+              })}
               block
               noSearch
               value={model.clientId}
               onSelect={(clientId) => {
-                _setmodel((prev) => {
+                setModel((prev) => {
                   return { ...prev, clientId };
                 });
               }}
@@ -232,7 +231,7 @@ function AddEdit({
               <Input
                 value={model.b2CName}
                 onChange={(b2CName) => {
-                  _setmodel((prev) => {
+                  setModel((prev) => {
                     return { ...prev, b2CName };
                   });
                 }}
@@ -251,7 +250,7 @@ function AddEdit({
           noSearch
           value={model.emmissionBankId}
           onSelect={(emmissionBankId) => {
-            _setmodel((prev) => {
+            setModel((prev) => {
               return { ...prev, emmissionBankId };
             });
           }}
@@ -266,7 +265,7 @@ function AddEdit({
           noSearch
           value={model.depositBankId}
           onSelect={(depositBankId) => {
-            _setmodel((prev) => {
+            setModel((prev) => {
               return { ...prev, depositBankId };
             });
           }}
@@ -279,7 +278,7 @@ function AddEdit({
           defaultValue={moment(model.date).format("YYYY-MM-DD")}
           value={moment(model.date).format("YYYY-MM-DD")}
           onChange={(date) =>
-            _setmodel((prev) => {
+            setModel((prev) => {
               return { ...prev, date };
             })
           }
@@ -293,7 +292,7 @@ function AddEdit({
           defaultValue={moment(model.dueDate).format("YYYY-MM-DD")}
           value={moment(model.dueDate).format("YYYY-MM-DD")}
           onChange={(dueDate) =>
-            _setmodel((prev) => {
+            setModel((prev) => {
               return { ...prev, dueDate };
             })
           }
@@ -311,7 +310,7 @@ function AddEdit({
               noSearch
               value={model.checkPurpose}
               onSelect={(checkPurpose) => {
-                _setmodel((prev) => {
+                setModel((prev) => {
                   return { ...prev, checkPurpose };
                 });
               }}
@@ -326,7 +325,7 @@ function AddEdit({
         placeholder="Textarea"
         value={model.notes}
         onChange={(notes) => {
-          _setmodel((prev) => {
+          setModel((prev) => {
             return { ...prev, notes };
           });
         }}
@@ -364,8 +363,8 @@ function AddEdit({
       )}
     </>
   );
-}
+};
 // AddEdit.defaultProps = {
 //   model: new ClientModel(),
 // };
-export default AddEdit;
+export default AddEditCheck;

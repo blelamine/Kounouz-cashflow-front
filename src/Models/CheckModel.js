@@ -14,6 +14,8 @@ export class CheckModel {
   attachments = [];
   b2CName = "";
   historic = "";
+  dueDate = "";
+  date = "";
 
   // constructor(
   //   number,

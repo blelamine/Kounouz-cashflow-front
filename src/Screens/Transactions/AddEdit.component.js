@@ -159,11 +159,11 @@ function AddEdit({
           }))}
           block
           noSearch
-          value={model.event}
-          onSelect={(event) =>
+          value={model.operationTypeId}
+          onSelect={(operationTypeId) =>
             _setmodel((prev) => ({
               ...prev,
-              event,
+              operationTypeId,
             }))
           }
         />

@@ -1,6 +1,6 @@
 import MinusRoundIcon from "@rsuite/icons/MinusRound";
 import moment from "moment";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import ReactExport from "react-data-export";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { Button, DatePicker, Input, SelectPicker, Tag } from "rsuite";
@@ -42,6 +42,7 @@ export default function Transactions(props) {
   const [balance, setbalance] = useState(0);
   const [loadingAuth, setloadingAuth] = useState(0);
   const [loadingSAge, setloadingSAge] = useState(false);
+  const [operations, setOperations] = useState([]);
 
   const [clients, setclients] = useState([]);
   const user = useRecoilValue(userAtom);
@@ -86,6 +87,13 @@ export default function Transactions(props) {
         .then((res) => setclients(res.data));
     }
   };
+
+  useEffect(() => {
+    APi.createAPIEndpoint(APi.ENDPOINTS.OperationType, {})
+      .customGet()
+      .then((res) => setOperations(res.data));
+  }, []);
+
   const fetch = (_take) => {
     setstate((prev) => {
       return { ...prev, loading: true };
@@ -313,7 +321,7 @@ export default function Transactions(props) {
         let m = {
           ...res.data,
         };
-        showReceipt(m);
+        showReceipt(m, operations);
       });
   };
 
@@ -725,6 +733,7 @@ export default function Transactions(props) {
             error={error}
             model={model}
             _setmodel={setmodel}
+            operations={operations}
           />
         }
       />{" "}

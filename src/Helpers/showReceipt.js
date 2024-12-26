@@ -1,6 +1,5 @@
 import { jsPDF } from "jspdf";
 import moment from "moment";
-import { typeOperations } from "../data/typeOpeartions";
 import { serviceTypes } from "../Constants/types";
 
 export const numberToLetter = (sum) => {
@@ -64,9 +63,9 @@ export const numberToLetter = (sum) => {
   return resultat.trim().concat(" dinars tunisien");
 };
 
-export const showReceipt = (receiptData) => {
+export const showReceipt = (receiptData, operations) => {
   const getDesignationById = (id) => {
-    const operation = typeOperations.find((elem) => elem.id === id);
+    const operation = operations.find((elem) => elem.id === id);
     return operation ? operation.designation : "-";
   };
 
@@ -79,7 +78,7 @@ export const showReceipt = (receiptData) => {
   const pageWidth = 210;
 
   const img = new Image();
-  img.src = "./logo.png";
+  img.src = "/logo.png";
   img.onload = () => {
     const x = 20;
     const y = 10;

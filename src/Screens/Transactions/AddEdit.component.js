@@ -18,10 +18,7 @@ import { userAtom } from "../../Atoms/user.atom";
 import Responsive from "../../Components/Responsive";
 import { serviceTypes } from "../../Constants/types";
 import { BASE_URL } from "../../Config/api.config";
-import moment from "moment";
 import Label from "../../Components/Label";
-import { typeOperations } from "../../data/typeOpeartions";
-import { Accordion } from "rsuite";
 
 function AddEdit({
   _setmodel,
@@ -31,8 +28,8 @@ function AddEdit({
   credit,
   loadingAttach,
   checkouts = [],
+  operations,
 }) {
-  console.log(model, "model");
   const [files, setfiles] = useState([]);
   const [loading, setloading] = useState(false);
   const user = useRecoilValue(userAtom);
@@ -105,8 +102,8 @@ function AddEdit({
   };
 
   const filteredTypeOperations = credit
-    ? typeOperations.filter((elem) => elem.isExpense)
-    : typeOperations.filter((elem) => !elem.isExpense);
+    ? operations.filter((elem) => elem.isExpense)
+    : operations.filter((elem) => !elem.isExpense);
 
   return (
     <>

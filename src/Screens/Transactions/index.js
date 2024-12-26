@@ -91,7 +91,9 @@ export default function Transactions(props) {
   useEffect(() => {
     APi.createAPIEndpoint(APi.ENDPOINTS.OperationType, {})
       .customGet()
-      .then((res) => setOperations(res.data));
+      .then((res) => {
+        setOperations(res.data);
+      });
   }, []);
 
   const fetch = (_take) => {

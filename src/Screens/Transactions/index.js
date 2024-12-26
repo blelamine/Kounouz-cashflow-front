@@ -27,7 +27,6 @@ import AddEdit from "./AddEdit.component";
 import { multiDataSet } from "./excel_data";
 import { multiDataSetSage } from "./sage.data.excel";
 import { showReceipt } from "../../Helpers/showReceipt";
-import { typeOperations } from "../../data/typeOpeartions";
 
 export default function Transactions(props) {
   const ExcelFile = ReactExport.ExcelFile;
@@ -337,7 +336,7 @@ export default function Transactions(props) {
   }, [filterModel.page, filterModel.take]);
 
   const getDesignationById = (id) => {
-    const operation = typeOperations.find((elem) => elem.id === id);
+    const operation = operations.find((elem) => elem.id === id);
     return operation ? operation.designation : "-";
   };
 

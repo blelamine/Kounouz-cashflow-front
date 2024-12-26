@@ -325,7 +325,7 @@ function AddEdit({
               <TagInput
                 block
                 size="md"
-                value={model.infosB2C.emails || []}
+                value={model?.infosB2C?.emails || []}
                 onChange={(emails) => {
                   let m = { ...model };
                   m.infosB2C.emails = emails;
@@ -339,7 +339,7 @@ function AddEdit({
               <TagInput
                 block
                 size="md"
-                value={model.infosB2C.phones || []}
+                value={model?.infosB2C?.phones || []}
                 onChange={(phones) => {
                   let m = { ...model };
                   m.infosB2C.phones = phones;

@@ -45,7 +45,6 @@ export default function Payment(props) {
       APi.createAPIEndpoint(APi.ENDPOINTS.Client, { q }, "/autocomplete")
         .customGet()
         .then((res) => {
-          console.log(res.data, "clients");
           forFilter ? setclients(res.data) : setclients(res.data);
         });
     }

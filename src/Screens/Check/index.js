@@ -50,7 +50,6 @@ export default function Check(props) {
   // --- add edit model ---
   const [error, setError] = useState("");
   const [model, setModel] = useRecoilState(CheckAtom);
-  console.log(model, "model");
   // ATOMS
   const [state, setstate] = useRecoilState(exportAddAtom);
   // HELPERS
@@ -64,7 +63,6 @@ export default function Check(props) {
       APi.createAPIEndpoint(APi.ENDPOINTS.Client, { q }, "/autocomplete")
         .customGet()
         .then((res) => {
-          console.log(res.data, "res");
           setclients(res.data);
           setclients2(res.data);
         });

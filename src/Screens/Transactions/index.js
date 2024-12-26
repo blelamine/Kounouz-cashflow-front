@@ -26,6 +26,8 @@ import { TransactionModel } from "../../Models/transactionModel";
 import AddEdit from "./AddEdit.component";
 import { multiDataSet } from "./excel_data";
 import { multiDataSetSage } from "./sage.data.excel";
+import { showReceipt } from "../../Helpers/showReceipt";
+import { typeOperations } from "../../data/typeOpeartions";
 
 export default function Transactions(props) {
   const ExcelFile = ReactExport.ExcelFile;
@@ -302,6 +304,19 @@ export default function Transactions(props) {
         }
       });
   };
+
+  const handlePrint = (id) => {
+    setError("");
+    APi.createAPIEndpoint(APi.ENDPOINTS.Transaction)
+      .fetchById(id)
+      .then((res) => {
+        let m = {
+          ...res.data,
+        };
+        showReceipt(m);
+      });
+  };
+
   // LIFE CYCLES
   useEffect(() => {
     fetch();
@@ -310,6 +325,12 @@ export default function Transactions(props) {
     fetch();
     fetchCheckouts();
   }, [filterModel.page, filterModel.take]);
+
+  const getDesignationById = (id) => {
+    const operation = typeOperations.find((elem) => elem.id === id);
+    return operation ? operation.designation : "-";
+  };
+
   // Grid Config
   const columns = [
     { value: "sequentialNumber", name: "N.P", render: (nb) => <h6>{nb}</h6> },
@@ -365,6 +386,13 @@ export default function Transactions(props) {
         <b style={{ color: "#a90e43" }}>
           {v ? v.firstName.toUpperCase() : "-"}
         </b>
+      ),
+    },
+    {
+      value: "operationTypeId",
+      name: "Type",
+      render: (v) => (
+        <b style={{ color: "#a90e43" }}>{getDesignationById(v)}</b>
       ),
     },
     {
@@ -736,6 +764,7 @@ export default function Transactions(props) {
           });
         }}
         deleteAction={deleteAction}
+        printAction={(id) => handlePrint(id)}
         actionKey="id"
         noAdvancedActions // for custom advanced actions
         columns={

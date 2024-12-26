@@ -7,6 +7,7 @@ import { Edit, More } from "@rsuite/icons";
 import { Divider, Dropdown, IconButton, Popover, Whisper } from "rsuite";
 import TrashIcon from "@rsuite/icons/Trash";
 import Swal from "sweetalert2";
+import FileDownloadIcon from "@rsuite/icons/FileDownload";
 
 class Grid extends React.Component {
   constructor(props) {
@@ -149,6 +150,7 @@ class Grid extends React.Component {
                             noAdvancedActions: props.noAdvancedActions,
                             editAction: props.editAction,
                             deleteAction: props.deleteAction,
+                            printAction: props.printAction,
                             actions: props.actions,
                           })}
                         </td>
@@ -194,6 +196,7 @@ const ActionCell = ({
   editAction,
   deleteAction,
   actions,
+  printAction,
   ...props
 }) => {
   function handleDelete() {
@@ -218,6 +221,14 @@ const ActionCell = ({
           appearance="subtle"
           onClick={() => editAction(dataKey)}
           icon={<Edit />}
+          circle
+        />
+      )}
+      {printAction && (
+        <IconButton
+          appearance="subtle"
+          onClick={() => printAction(dataKey)}
+          icon={<FileDownloadIcon />}
           circle
         />
       )}

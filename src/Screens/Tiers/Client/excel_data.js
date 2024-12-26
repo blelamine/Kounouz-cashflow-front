@@ -4,7 +4,6 @@ export const multiDataSet = (data) => {
       columns: [
         { title: "Nom", width: { wpx: 120 } },
         { title: "Code", width: { wpx: 80 } }, //char width
-
         { title: "Code Tax", width: { wpx: 80 } }, //pixels width
         { title: "Adresse", width: { wpx: 150 } },
         { title: "Emails", width: { wpx: 150 } }, //pixels width

@@ -13,10 +13,10 @@ import Responsive from "../../Components/Responsive";
 import { paymentType } from "../../Constants/types";
 import validate from "../../Helpers/validate";
 import { ClientModel } from "../../Models/TiersModels";
-import AddEdit from "./AddEdit.component";
 import { multiDataSet } from "./excel_data";
 import PageEndIcon from "@rsuite/icons/PageEnd";
 import { PaymentModel } from "../../Models/SaleModels";
+import AddEditPayment from "./AddEditPayment.component";
 
 export default function Payment(props) {
   // STATE
@@ -44,9 +44,9 @@ export default function Payment(props) {
     if (typeof q == "undefined" || q.length > 2) {
       APi.createAPIEndpoint(APi.ENDPOINTS.Client, { q }, "/autocomplete")
         .customGet()
-        .then((res) =>
-          forFilter ? setclients(res.data) : setclients(res.data)
-        );
+        .then((res) => {
+          forFilter ? setclients(res.data) : setclients(res.data);
+        });
     }
   };
   const fetch = () => {
@@ -181,7 +181,7 @@ export default function Payment(props) {
         save={save}
         ActionOnClose={reset}
         AddComponent={
-          <AddEdit
+          <AddEditPayment
             clients={clients}
             fetchClients={fetchClients}
             error={error}

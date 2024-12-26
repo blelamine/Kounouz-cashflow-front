@@ -22,7 +22,7 @@ export default function Checkout(props) {
   const [model, setmodel] = useState({ name: "", code: "" });
   const [show, setshow] = useState(0);
 
-  const [userModel, setuserModel] = useState(UserModel("AgentCheckout"));
+  const [userModel, setuserModel] = useState(new UserModel("AgentCheckout"));
   // ATOMS
   const [state, setstate] = useRecoilState(exportAddAtom);
   // HELPERS

@@ -14,10 +14,10 @@ import Responsive from "../../Components/Responsive";
 import { paymentType, serviceTypes } from "../../Constants/types";
 import validate from "../../Helpers/validate";
 import { CheckModel } from "../../Models/CheckModel";
-import { default as AddCheck } from "../Check/AddEdit.component";
 import PlusRoundIcon from "@rsuite/icons/PlusRound";
+import AddEditCheck from "../Check/AddEditCheck.component";
 
-function AddEdit({ _setmodel, model, clients, fetchClients }) {
+const AddEditPayment = ({ _setmodel, model, clients, fetchClients }) => {
   const [checks, setchecks] = useState([]);
   // const [model, setmodel] = useRecoilState(saleSate);
   const [banks, setbanks] = useState([]);
@@ -354,7 +354,7 @@ function AddEdit({ _setmodel, model, clients, fetchClients }) {
             borderRadius: "5px",
           }}
         >
-          <AddCheck
+          <AddEditCheck
             _delete={_delete}
             upload={upload}
             error={errorcheck}
@@ -369,6 +369,7 @@ function AddEdit({ _setmodel, model, clients, fetchClients }) {
             banks={banks}
             fetchBanks={fetchBanks}
             _setmodel={set_checkModel}
+            clients={clients}
           />
           <Button onClick={save} appearance="primary">
             {/* {state.loading ? <Loader size="sm" /> : "Enregistrer"} */}
@@ -378,8 +379,8 @@ function AddEdit({ _setmodel, model, clients, fetchClients }) {
       )}
     </>
   );
-}
+};
 // AddEdit.defaultProps = {
 //   model: new ClientModel(),
 // };
-export default AddEdit;
+export default AddEditPayment;

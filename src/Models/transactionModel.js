@@ -1,22 +1,29 @@
-import moment from "moment";
-
 export class TransactionModel {
-  event;
-  designation = "";
-  amount = 0;
-  //date = moment().format("yyyy-DD-MM");
-  //   date = new Date();
-  debit = 0;
-  credit = 0;
-  date = new Date();
-  IsCancelled = false;
-  representative = "";
-  clientId = null;
-  checkoutId = null;
-  bankId;
-  ref = "";
-  attachments = "";
   constructor(debit) {
     this.debit = debit;
+    this.event = null;
+    this.designation = "";
+    this.amount = 0;
+    this.credit = 0;
+    this.date = new Date();
+    this.IsCancelled = false;
+    this.representative = "";
+    this.clientId = null;
+    this.operationTypeId = null;
+    this.checkoutId = null;
+    this.bankId = null;
+    this.ref = "";
+    this.attachments = "";
+    this.infosB2C = new InfosB2C();
+    this.service = null;
+  }
+}
+
+export class InfosB2C {
+  constructor() {
+    this.fullName = null;
+    this.passportNumber = null;
+    this.phones = [];
+    this.emails = [];
   }
 }

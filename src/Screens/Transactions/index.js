@@ -1,6 +1,6 @@
 import MinusRoundIcon from "@rsuite/icons/MinusRound";
 import moment from "moment";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import ReactExport from "react-data-export";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { Button, DatePicker, Input, SelectPicker, Tag } from "rsuite";
@@ -26,6 +26,7 @@ import { TransactionModel } from "../../Models/transactionModel";
 import AddEdit from "./AddEdit.component";
 import { multiDataSet } from "./excel_data";
 import { multiDataSetSage } from "./sage.data.excel";
+import { showReceipt } from "../../Helpers/showReceipt";
 
 export default function Transactions(props) {
   const ExcelFile = ReactExport.ExcelFile;
@@ -40,6 +41,7 @@ export default function Transactions(props) {
   const [balance, setbalance] = useState(0);
   const [loadingAuth, setloadingAuth] = useState(0);
   const [loadingSAge, setloadingSAge] = useState(false);
+  const [operations, setOperations] = useState([]);
 
   const [clients, setclients] = useState([]);
   const user = useRecoilValue(userAtom);
@@ -84,6 +86,15 @@ export default function Transactions(props) {
         .then((res) => setclients(res.data));
     }
   };
+
+  useEffect(() => {
+    APi.createAPIEndpoint(APi.ENDPOINTS.OperationType, {})
+      .customGet()
+      .then((res) => {
+        setOperations(res.data);
+      });
+  }, []);
+
   const fetch = (_take) => {
     setstate((prev) => {
       return { ...prev, loading: true };
@@ -115,7 +126,7 @@ export default function Transactions(props) {
 
           document.querySelector("#hidden-btn-export").click();
         } else {
-          setdata(res.data.data);
+          setdata(res?.data?.data);
           setstate((prev) => {
             return { ...prev, loading: false };
           });
@@ -302,6 +313,19 @@ export default function Transactions(props) {
         }
       });
   };
+
+  const handlePrint = (id) => {
+    setError("");
+    APi.createAPIEndpoint(APi.ENDPOINTS.Transaction)
+      .fetchById(id)
+      .then((res) => {
+        let m = {
+          ...res.data,
+        };
+        showReceipt(m, operations);
+      });
+  };
+
   // LIFE CYCLES
   useEffect(() => {
     fetch();
@@ -310,6 +334,12 @@ export default function Transactions(props) {
     fetch();
     fetchCheckouts();
   }, [filterModel.page, filterModel.take]);
+
+  const getDesignationById = (id) => {
+    const operation = operations.find((elem) => elem.id === id);
+    return operation ? operation.designation : "-";
+  };
+
   // Grid Config
   const columns = [
     { value: "sequentialNumber", name: "N.P", render: (nb) => <h6>{nb}</h6> },
@@ -362,7 +392,16 @@ export default function Transactions(props) {
       value: "representative",
       name: "Représentant",
       render: (v) => (
-        <b style={{ color: "#a90e43" }}>{v ? v.toUpperCase() : "-"}</b>
+        <b style={{ color: "#a90e43" }}>
+          {v ? v.firstName.toUpperCase() : "-"}
+        </b>
+      ),
+    },
+    {
+      value: "operationTypeId",
+      name: "Type",
+      render: (v) => (
+        <b style={{ color: "#a90e43" }}>{getDesignationById(v)}</b>
       ),
     },
     {
@@ -695,6 +734,7 @@ export default function Transactions(props) {
             error={error}
             model={model}
             _setmodel={setmodel}
+            operations={operations}
           />
         }
       />{" "}
@@ -734,6 +774,7 @@ export default function Transactions(props) {
           });
         }}
         deleteAction={deleteAction}
+        printAction={(id) => handlePrint(id)}
         actionKey="id"
         noAdvancedActions // for custom advanced actions
         columns={
